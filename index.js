@@ -76,7 +76,7 @@ class DeviceProviderRossNKIPS {
   providerFunctions = [
     {
       id: 'XPT',
-      label: 'Crosspoint',
+      label: 'Direct Crosspoint',
       parameters: [
         {
           inputType: 'comboBox',
@@ -107,6 +107,56 @@ class DeviceProviderRossNKIPS {
           max: this.device?.configuration.sources
         }
       ]
+    },
+    {
+      id: 'LVL_MSX',
+      label: 'Level Select (MultiStage Crosspoint)',
+      parameters: [
+        {
+          inputType: 'comboBox',
+          id: 'level',
+          label: 'Level',
+          required: true,
+          items: this.levels,
+          placeholder: 'Signal Level'
+        }
+      ]
+    },
+    {
+      id: 'DST_MSX',
+      label: 'Destination Select (MultiStage Crosspoint)',
+      parameters: [
+        {
+          inputType: 'numberInput',
+          id: 'dst',
+          label: 'Destination',
+          required: true,
+          placeholder: 'Destination',
+          invalidText: 'Invalid Destination',
+          min: 1,
+          max: this.device?.configuration.destinations
+        }
+      ]
+    },
+    {
+      id: 'SRC_MSX',
+      label: 'Source Select (MultiStage Crosspoint)',
+      parameters: [
+        {
+          inputType: 'numberInput',
+          id: 'src',
+          label: 'Source',
+          required: true,
+          placeholder: 'Source',
+          invalidText: 'Invalid Source',
+          min: 1,
+          max: this.device?.configuration.sources
+        }
+      ]
+    },
+    {
+      id: 'TAKE_MSX',
+      label: 'Take (MultiStage Crosspoint)'
     }
   ]
 
@@ -208,10 +258,33 @@ class DeviceProviderRossNKIPS {
     this.socket.write(buffer)
   }
 
+  multistageDataStore = {}
+
   interface = (_action) => {
     switch (_action.providerFunction.id) {
       case 'XPT': // XPT
         this.xpt({ destination: _action.parameters.dst, source: _action.parameters.src, level: _action.parameters.level.id })
+        break
+      
+      // MULTISTAGE CROSSPOINT
+      case 'LVL_MSX': // Multistage Crosspoint Level Select
+        this.multistageDataStore[_action.controller] = { ...this.multistageDataStore[_action.controller], level: _action.parameters.level.id }
+        break
+      case 'DST_MSX': // Multistage Crosspoint Destination Select
+        this.multistageDataStore[_action.controller] = { ...this.multistageDataStore[_action.controller], dst: _action.parameters.dst }
+        break
+      case 'SRC_MSX': // Multistage Crosspoint Source Select
+        this.multistageDataStore[_action.controller] = { ...this.multistageDataStore[_action.controller], src: _action.parameters.src }
+        break
+      case 'TAKE_MSX': // Multistage Crosspoint Take
+        console.log(this.multistageDataStore)
+        if (this.multistageDataStore[_action.controller]?.level) { // Check if level
+          if (this.multistageDataStore[_action.controller]?.dst) { // Check if destination
+            if (this.multistageDataStore[_action.controller]?.src) { // Check if source
+              this.xpt({ destination: this.multistageDataStore[_action.controller].dst, source: this.multistageDataStore[_action.controller].src, level: this.multistageDataStore[_action.controller].level })
+            } else log('warn', `virtual/device/${this.device.id} (${this.device.label})`, 'No Source Selected')
+          } else log('warn', `virtual/device/${this.device.id} (${this.device.label})`, 'No Destination Selected')
+        } else log('warn', `virtual/device/${this.device.id} (${this.device.label})`, 'No Level Selected')
         break
     }
   }
