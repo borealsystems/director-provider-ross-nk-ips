@@ -277,7 +277,6 @@ class DeviceProviderRossNKIPS {
         this.multistageDataStore[_action.controller] = { ...this.multistageDataStore[_action.controller], src: _action.parameters.src }
         break
       case 'TAKE_MSX': // Multistage Crosspoint Take
-        console.log(this.multistageDataStore)
         if (this.multistageDataStore[_action.controller]?.level) { // Check if level
           if (this.multistageDataStore[_action.controller]?.dst) { // Check if destination
             if (this.multistageDataStore[_action.controller]?.src) { // Check if source
