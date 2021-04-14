@@ -50,11 +50,19 @@ class DeviceProviderRossNKIPS {
         required: true,
         min: 16,
         max: 144
+      },
+      {
+        inputType: 'textAreaInput',
+        id: 'labels',
+        label: 'Labels',
+        required: false
       }
     ],
     defaults: [null, 254],
     constructor: DeviceProviderRossNKIPS
   }
+
+  getLabel = (a, index) => ({ id: index, label: a.label + (a.description ? ` - ${a.description}` : '') })
 
   providerFunctions = () => {
     return [
@@ -75,7 +83,7 @@ class DeviceProviderRossNKIPS {
             id: 'dst',
             label: 'Destination',
             required: true,
-            items: this.router.labels.outputs.map((output, index) => ({id: index, ...output })) ?? [],
+            items: this.router.labels.outputs.map((output, index) => this.getLabel(output, index)) ?? [],
             placeholder: 'Destination'
           },
           {
@@ -83,7 +91,7 @@ class DeviceProviderRossNKIPS {
             id: 'src',
             label: 'Source',
             required: true,
-            items: this.router.labels.inputs.map((input, index) => ({id: index, ...input })) ?? [],
+            items: this.router.labels.inputs.map((input, index) => this.getLabel(input, index)) ?? [],
             placeholder: 'Source'
           }
         ]
@@ -111,7 +119,7 @@ class DeviceProviderRossNKIPS {
             id: 'dst',
             label: 'Destination',
             required: true,
-            items: this.router.labels.outputs.map((output, index) => ({id: index, ...output })) ?? [],
+            items: this.router.labels.outputs.map((output, index) => this.getLabel(output, index)) ?? [],
             placeholder: 'Destination'
           }
         ]
@@ -125,7 +133,7 @@ class DeviceProviderRossNKIPS {
             id: 'src',
             label: 'Source',
             required: true,
-            items: this.router.labels.inputs.map((input, index) => ({id: index, ...input })) ?? [],
+            items: this.router.labels.inputs.map((input, index) => this.getLabel(input, index)) ?? [],
             placeholder: 'Source'
           }
         ]

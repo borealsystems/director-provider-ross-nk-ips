@@ -1,6 +1,6 @@
 {
   "name": "director-provider-ross-nk-ips",
-  "version": "2.0.0",
+  "version": "2.1.0",
   "description": "Director Device Provider for Ross NK routers via NK-IPS",
   "main": "index.js",
   "repository": "https://phabricator.boreal.systems/diffusion/9/director-provider-ross-nk-ips.git",
