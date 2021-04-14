@@ -6,5 +6,8 @@
   "repository": "https://phabricator.boreal.systems/diffusion/9/director-provider-ross-nk-ips.git",
   "author": "Oliver Herrmann <oliver@monoxane.io>",
   "license": "GPL-3.0",
-  "private": true
+  "private": true,
+  "dependencies": {
+    "nkips": "^1.1.2"
+  }
 }
