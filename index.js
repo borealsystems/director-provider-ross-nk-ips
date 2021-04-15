@@ -1,5 +1,4 @@
 const NKIPS = require('nkips')
-import net from 'net'
 import { devices } from '../../../db'
 import log from '../../../utils/log'
 import STATUS from '../../../utils/statusEnum'
